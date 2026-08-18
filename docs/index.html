@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chaukhat — frame quote</title>
+<meta name="description" content="Chaukhat prices a photo or mirror frame from height × width — perimeter-rate molding plus area-rate glass and mount, plus labour — as an itemised, printable quote.">
+<style>
+  :root{--bg:#f7f4ef;--card:#fff;--ink:#231a0f;--muted:#69583f;--brand:#7e5b34;--brand-ink:#543c20;--line:#eaded0;--accent:#f2e8db}
+  @media (prefers-color-scheme:dark){:root{--bg:#14110b;--card:#1d1810;--ink:#eee4d5;--muted:#b5a488;--brand:#bf8b52;--brand-ink:#eccdaa;--line:#2a2216;--accent:#231b11}}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  header{padding:64px 0 24px;text-align:center}
+  .eyebrow{color:var(--brand);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:13px}
+  h1{font-size:44px;margin:.2em 0 .1em;letter-spacing:-.02em}
+  .tag{color:var(--muted);font-size:19px;max-width:640px;margin:8px auto 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:28px 0}
+  @media (max-width:760px){.grid{grid-template-columns:1fr}h1{font-size:34px}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+  .card h2{margin:0 0 8px;font-size:20px}
+  label{display:block;font-size:13px;color:var(--muted);margin:8px 0 4px}
+  input{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:15px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .out{margin-top:16px;background:var(--accent);border-radius:12px;padding:16px}
+  .rowline{display:flex;justify-content:space-between;padding:3px 0;font-size:14px}
+  .tot{display:flex;justify-content:space-between;font-size:22px;font-weight:800;color:var(--brand-ink);border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:40px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Chaukhat · चौखट</div>
+    <h1>An instant framing quote</h1>
+    <p class="tag">Odd dimensions × molding tier × glass and mount area × labour doesn't collapse to a
+      memorised number. Type the size, pick the rates, hand over an itemised quote.</p>
+  </header>
+  <div class="grid">
+    <div class="card">
+      <h2>Try it</h2>
+      <div class="two"><div><label>Height cm</label><input id="h" type="number" value="40"></div>
+        <div><label>Width cm</label><input id="w" type="number" value="50"></div></div>
+      <div class="two"><div><label>Molding ₹/m</label><input id="mold" type="number" value="120"></div>
+        <div><label>Labour ₹</label><input id="lab" type="number" value="150"></div></div>
+      <div class="two"><div><label>Glass ₹/sqm</label><input id="glass" type="number" value="800"></div>
+        <div><label>Mount ₹/sqm</label><input id="mount" type="number" value="300"></div></div>
+      <div class="out">
+        <div id="geo" style="font-size:13px;color:var(--muted)"></div>
+        <div class="rowline"><span>Molding</span><b id="rm">–</b></div>
+        <div class="rowline"><span>Glass</span><b id="rg">–</b></div>
+        <div class="rowline"><span>Mount</span><b id="rmo">–</b></div>
+        <div class="rowline"><span>Labour</span><b id="rl">–</b></div>
+        <div class="tot"><span>Total</span><span id="tot">₹0.00</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Perimeter + area, not guesswork</h2>
+      <p style="color:var(--muted)">Framers price off a paper rate card; billing software has no
+        perimeter+area primitive. Molding is charged per metre of frame; glass and mount per square
+        metre. The printed quote lets the framer negotiate against a paper trail.</p>
+      <p style="color:var(--muted);font-size:14px">Flutter → Go → PostgreSQL; the Go engine prices the frame.</p>
+    </div>
+  </div>
+  <footer>Chaukhat · a local-first shopkeeper tool · offline, no account.</footer>
+</div>
+<script>
+  const $=id=>document.getElementById(id), inr=v=>'₹'+(isFinite(v)?v:0).toFixed(2);
+  function calc(){
+    const h=+$('h').value||0, w=+$('w').value||0, mold=+$('mold').value||0,
+      glass=+$('glass').value||0, mount=+$('mount').value||0, lab=+$('lab').value||0;
+    const per=2*(h+w)/100, area=(h*w)/10000;
+    const m=per*mold, g=area*glass, mo=area*mount, t=m+g+mo+lab;
+    $('geo').textContent=`${per.toFixed(2)} m perimeter · ${area.toFixed(3)} sqm`;
+    $('rm').textContent=inr(m); $('rg').textContent=inr(g); $('rmo').textContent=inr(mo);
+    $('rl').textContent=inr(lab); $('tot').textContent=inr(t);
+  }
+  document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc)); calc();
+</script>
+</body>
+</html>
